@@ -1,0 +1,78 @@
+{% extends "auctions/layout.html" %}
+{% load static %}
+
+{% block title %} Category {% endblock %}
+
+{% block body %}
+
+<main>
+
+    <section class="py-5 text-center container">
+        <div class="row py-lg-3">
+            <div class="col-lg-6 col-md-8 mx-auto ">
+                <h1 class="h1 fw-bold">{{ category|capfirst }}</h1>
+                <p class="text-muted">Look Review and Put Up</p>
+            </div>
+        </div>
+    </section>
+
+
+    <div class="album py-5">
+        <div class="container">
+            <div class="row row-cols-1 row-cols-sm-2 row-cols-md-5 g-3">
+                
+            {% for listing in listings %}
+            
+                <div class="col-lg-4">
+                    <div class="card mb-3" style="width: 18rem; border: none;">
+                        {% if listing.image %}
+                            <a href="{% url 'listing' listing.slug %}">
+                                <img class="card-img-top" alt="Responsive image" src="https://picsum.photos/id/0/300/200" >
+                            </a>
+                        {% endif %}
+                        <div class="card-body" style="background-color:#f2efeb ;">
+                            <h5 class="card-title">
+                                <a class="text-dark text-decoration-none" href="{% url 'listing' listing.slug %}">
+                                    {{ listing.title }}
+                                </a>
+                            </h5>
+                            <div class="d-flex justify-content-between align-items-center">
+                                <small class="text-muted">
+                                    <b style="color:#8a4306;">
+                                        {% if listing.latest_bid %}
+                                            {{listing.latest_bid}}€
+                                        {% else %}
+                                            {{listing.price}}€
+                                        {% endif %}
+                                    </b>
+                                </small>
+                            </div>
+                            <small class="text-muted">
+                                Created on: 
+                                <strong>
+                                    {{listing.created_on|date:"d-m-Y" }}
+                                </strong>
+                            </small>
+                            <br>
+                            {% if listing.is_active %}
+                                <span class="text-muted">
+                                    Active
+                                </span>
+                            {% else %}
+                                <span class="text-muted">
+                                    Closed
+                                </span>
+                            {% endif %}
+                        </div>
+                    </div>
+                </div>
+
+            {% endfor %}
+            </div>
+        </div>
+    </div>
+
+
+</main>
+
+{% endblock %}

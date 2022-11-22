@@ -1,0 +1,42 @@
+{% extends "auctions/layout.html" %}
+{% load static %}
+{% block body %}
+
+<main>
+  
+    <section class="py-5 text-center container">
+        <div class="row py-lg-3">
+            <div class="col-lg-6 col-md-8 mx-auto ">
+                <h1 class="h1 fw-bold">All Categories </h1>
+                <p class="text-muted">Look Review and Put Up</p>
+            </div>
+        </div>
+
+    </section>
+                
+            {% for category in categories %}
+
+                <div class="col-lg-4">
+                    <div class="card mb-3" style="width: 18rem; border: none;">
+                        <a href="{% url  'category' category  %}">
+                            <img class="card-img-top" alt="Responsive image" src="https://picsum.photos/id/60/300/200" >
+                        </a>
+                    
+                        <div class="card-body" style="background-color:#f2efeb ;">
+                            <h3 class="card-title">
+                                <a class="text-dark text-decoration-none" href="{% url 'category' category %}">
+                                    {{ category|capfirst }}
+                                </a>
+                            </h3>
+                      
+                        </div>
+                    </div>
+                </div>
+
+            {% endfor %}
+
+
+</main>
+
+
+{% endblock %}

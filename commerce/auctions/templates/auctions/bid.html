@@ -1,0 +1,159 @@
+<div class="mt-4" style="color:#616159;">
+    {% if user.is_authenticated and listing.owner != user %}
+                        
+        {% if request.user != listing.winner  and listing.is_active == True %}
+
+            <div style="background-color:#f2efeb;">
+
+                <!-- Check if price or latest_bid -->
+                {% if listing.latest_bid %}
+                    <b>
+                        With €{{ listing.latest_bid }}, the front runner now is:
+                    </b>
+                    <strong>
+                        <em>
+                            {{listing.winner|capfirst}}
+                        </em>
+                    </strong>
+                
+                {% elif listing.price %}
+                    <b>
+                        There are no existing bids. Be the first to place one...
+                    </b>  
+                {% endif %}
+            
+                <form action="{% url 'listing_bid' listing.slug  %}"
+                 method="post" enctype="multipart/form-data">
+                    {{ bid_form }}
+                    {% csrf_token %} 
+                    <div class="mt-3">
+                        <button type="Submit" class="btn btn-secondary" value="Submit bid">
+                            Push It
+                        </button>
+                        {% if message %}
+                            <strong>
+                                {{ message }} 
+                                    {% if listing.latest_bid %} 
+                                        €{{ listing.latest_bid }}
+                                    {% else  %}
+                                        €{{ listing.price }}
+                                    {% endif  %}
+                            </strong>
+                        {% endif %}
+                    </div>
+                </form>
+            </div>
+
+        {% elif request.user == listing.winner and listing.is_active == True %}
+                        
+            <div class="mt-5" style="background-color:#f2f1eb ;">
+                <b>Cheers <em>{{listing.winner|capfirst}}</em>!!!&nbsp; 
+                    Your bid is currently the highest bid
+                </b>
+            
+                <form action="{% url 'listing_bid' listing.slug %}" 
+                    method="post" enctype="multipart/form-data">
+                    {{ bid_form }}
+                    {% csrf_token %} 
+                    <div class="mt-3">
+                        <button type="hidden" class="btn btn-secondary" value="Submit bid">
+                            Push It
+                        </button>
+                        {% if message %}
+                        <strong>
+                            {{ message }} €{{ listing.latest_bid }}
+                        </strong>
+                        {% endif %}
+                    </div>
+                </form>
+            </div>
+                    
+        {% elif request.user == listing.winner and listing.is_active == False %}
+            <h4 style="background-color:#f2f1eb ;">
+                <span>
+                    Congrats <em style="color:#0b4019 ;"><b>{{ listing.winner|capfirst }}</b></em>!!! 
+                    You have the listing for the price of <b style="color:#0b4019 ;">€{{ listing.latest_bid }}</b>
+                </span>
+            </h4>
+                        
+        {% elif request.user != listing.winner and listing.is_active == False %}
+            <h4 style="background-color:#f2f1eb ;">
+                <span>
+                    {% if listing.winner %}
+                        <em>
+                            <b>{{ listing.winner|capfirst }}</b>
+                        </em> has won the listing for €<b>{{ listing.latest_bid }}</b>
+
+                    {% else %}
+
+                        <em><b>No winner for this one!</b></em>
+                    {% endif %}
+                </span>
+            </h4>
+        {% endif %}
+
+    {% elif user.is_authenticated and listing.owner == user %}
+
+        {% if listing.winner and listing.is_active == False  %}
+            <div> The winner of the auction is 
+                <em>
+                    <b>{{ listing.winner|capfirst }}</b>
+                </em> 
+                  with <b>€{{ listing.latest_bid }}</b>
+            </div>
+        
+        {% elif not listing.winner and listing.is_active == True %}
+            <div style="background-color:#f2f1eb ;">
+                <span>
+                    <b>
+                        You can close your auction if you want to
+                    </b>
+                </span>
+            </div>
+            <div class="mt-2">
+                <a href="{% url 'listing_close' listing.slug %}">
+                    <button class="btn btn-secondary" type="button">
+                        Close Listing
+                    </button>
+                </a>
+            </div>
+            
+        {% elif listing.winner and listing.is_active == True %}
+            <div style="background-color:#f2f1eb ;">
+                <span>
+                    By closing you allow
+                    <b>
+                        <em> 
+                            {{ listing.winner|capfirst }}
+                        </em>
+                    </b> 
+                    to be the owner of the listing...
+                </span>
+            </div>
+            <div class="mt-2">
+                <a href="{% url 'listing_close' listing.slug %}">
+                    <button class="btn btn-secondary" type="button">
+                         Close Listing
+                    </button>
+                    
+                </a>
+            </div>
+        {% endif %}
+
+    {% else %}
+        <a class="nav-link" href="{% url 'login' %}">
+            Log In
+        </a>
+    {% endif %} 
+</div>
+<div class="mt-4">
+    {% if  listing.latest_bid > listing.price %} 
+        <b>
+            Highest bid: €{{ listing.latest_bid }}
+        </b>
+    {% elif listing.price %} 
+        <b>
+            Launch: €{{ listing.price }}
+        </b>
+    {% endif %}
+</div>

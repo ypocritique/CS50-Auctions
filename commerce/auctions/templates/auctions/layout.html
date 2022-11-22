@@ -1,0 +1,65 @@
+{% load static %}
+
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset='utf-8'>
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+        <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/css/bootstrap.min.css" integrity="sha384-Vkoo8x4CGsO3+Hhxv8T/Q5PaXtkKtu6ug5TOeNV6gBiFeWPGFN9MuhOf23Q9Ifjh" crossorigin="anonymous">
+        <title>{% block title %}Auctions{% endblock %}</title>
+        <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.0-beta1/dist/js/bootstrap.bundle.min.js" integrity="sha384-ygbV9kiqUc6oa4msXn9868pTtWMgiQaeYH7/t7LECLbyPA2x65Kgf80OJFdroafW" crossorigin="anonymous"></script>
+        <link href="{% static 'auctions/styles.css' %}" rel="stylesheet">
+    </head>
+    
+    <body>
+        <header>
+            <nav class="navbar navbar-expand-lg navbar-light bg-white border-bottom dropdown">
+                <div class="container-fluid ">
+                    <a class="navbar-brand" href="/">Auctions  {% if user.is_authenticated %}<small style="font-size: 0.600em;">
+                        Signed in as {{user.username|capfirst}}</small>{% endif %}
+                    </a>
+                    <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent"
+                        aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+                        <span class="navbar-toggler-icon"></span>
+                    </button>
+                    <div class="collapse navbar-collapse justify-content-end" id="navbarSupportedContent">
+                                <!-- ↑↑(justify-content-end) set the menu to the right side↑↑ -->
+                        <ul class="navbar-nav"> 
+                            <li class="nav-item">
+                                <a class="nav-link " href="{% url 'index' %}" aria-expanded="false">
+                                Active Listings 
+                                </a>
+                            </li>
+                            {% if user.is_authenticated %}
+                                <li class="nav-item">
+                                    <a class="nav-link" href="{% url 'categories' %}">Categories</a>
+                                </li>
+                                <li class="nav-item">
+                                    <a class="nav-link" href="{% url 'watchlist' %}">Watchlist</a>
+                                </li>
+                                <li class="nav-item">
+                                    <a class="nav-link" href="{% url 'create' %}">Create Listing</a>
+                                </li>
+                                <li class="nav-item">
+                                    <a class="nav-link" href="{% url 'logout' %}">Log Out</a>
+                                </li>
+                            {% else %}
+                                <li class="nav-item">
+                                    <a class="nav-link" href="{% url 'login' %}">Log In</a>
+                                </li>
+                                <li class="nav-item">
+                                    <a class="nav-link" href="{% url 'register' %}">Register</a>
+                                </li>
+                            {% endif %}
+                        </ul>
+                    </div>
+                </div>
+            </nav>
+        </header>
+        
+        {% block body %}
+        {% endblock %}
+
+    </body>
+</html>
+

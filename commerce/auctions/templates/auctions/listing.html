@@ -1,0 +1,82 @@
+{% extends "auctions/layout.html" %} 
+{% load static %}
+{% block title %}{{ listing.name }}{% endblock %}
+
+{% block body %}
+
+
+    
+<main class="my-5">
+    <div class="container">
+
+        <!-- WATCHLIST SECTION -->
+        <div class="row">
+            <div class="col-md-6">
+                <a class="btn btn-outline-dark mt-auto" href="{% url 'watch_edition' listing.slug %}">
+                    {% if listing.is_watched %}
+                        Remove from Watchlist
+                    {% else %}
+                        Add to Watchlist
+                    {% endif %}
+                </a>
+            </div>
+
+                <!--     LISTING DETAIL SECTION    -->
+            <div class="col-md-7" style="padding:10px;">
+                <img class="img-fluid mx-auto d-block"  alt="responsive image" 
+                src="https://picsum.photos/id/532/800/500"> <!--Could have used {{listing.image.url}}-->
+            </div> 
+            
+            <div class="col-md-5" >
+                <h1 class="mt-3" style="text-decoration:none; color:#0b4019;">
+                    {{ listing.title|capfirst }}
+                </h1>
+                <h5>
+                    <a href="{% url  'category' listing.category  %}" style="text-decoration:none; color:#5c2e03;">
+                        <strong>
+                            Category <==> {{ listing.category|capfirst }}
+                        </strong>
+                    </a>
+                </h5>
+
+                <h6 class="mt-4" style="color:#592a02; background-color:#f2efeb;">
+                    Vendeur:
+                    <strong>
+                        <em>
+                            {% if listing.owner == user %}
+                                <b>
+                                    You
+                                </b>
+                            {% else %}
+                                <b>
+                                    {{ listing.owner|capfirst }}
+                                </b>
+                            {% endif %}
+                        </em>
+                    </strong> 
+                </h6>
+                <p class="mt-3">
+                    <div>
+                        <b>
+                            Description 
+                        </b>
+                    </div>
+                    {{ listing.description|slice:":80"|linebreaksbr }}...
+                </p>
+            
+                <!--     BID SECTION      -->
+                    {% include 'auctions/bid.html' %}
+                <!--   END BID SECTION   -->
+
+            </div>
+        </div>
+
+        <!--   COMMENT SECTION   -->
+        <section>
+            {% include 'auctions/comment.html' %}
+        </section>
+        <!--   END COMMENT SECTION   -->
+
+    </div>
+</main>
+{% endblock %}
